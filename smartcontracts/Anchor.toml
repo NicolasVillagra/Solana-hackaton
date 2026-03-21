@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-smartcontracts = "8UF83GAK1UZ3vS3wxuqa2bMEgJ2QfvUaS3EQsM5i5oaR"
+gaia_recs = "8UF83GAK1UZ3vS3wxuqa2bMEgJ2QfvUaS3EQsM5i5oaR"
 
 [registry]
 url = "https://api.apr.dev"

@@ -3,6 +3,7 @@ import { IsString, IsNotEmpty, IsLowercase, Length } from 'class-validator';
 export class RegisterDeviceDto {
   /**
    * The public key of the device owner.
+   * 🔴 AUDIT V2 FIX: Must be a valid Solana Base58 string (32-44 chars).
    * @example "7xKXtg2CW87d97TXJSDpbD5jBkheTqA83TZRuJosgAsU"
    */
   @IsString()

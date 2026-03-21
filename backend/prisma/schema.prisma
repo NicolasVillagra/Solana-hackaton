@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Device {
+  id           String         @id @default(cuid())
+  deviceId     String         @unique
+  ownerWallet  String
+  secretHash   String         // 🔴 AUDIT V2.1: Production Auth (Hashed)
+  location     String
+  status       String         @default("ACTIVE")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  energyReports EnergyReport[]
+}
+
+model EnergyReport {
+  id        String   @id @default(cuid())
+  deviceId  String
+  mwh       Float
+  co2Saved  Float
+  txHash    String?
+  timestamp DateTime @default(now())
+  device    Device   @relation(fields: [deviceId], references: [deviceId])
+}

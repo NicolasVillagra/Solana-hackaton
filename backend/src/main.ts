@@ -5,8 +5,11 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   
-  // Enable CORS for frontend integration
-  app.enableCors();
+  // Enable restricted CORS for production hardening
+  app.enableCors({
+    origin: ['https://gaia.energy', 'http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+  });
   
   // Enable global validation pipes for DTOs
   app.useGlobalPipes(new ValidationPipe({
