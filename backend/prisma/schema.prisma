@@ -29,7 +29,7 @@ model Device {
 model EnergyReport {
   id        String   @id @default(cuid())
   deviceId  String
-  mwh       Float
+  kwh       Float
   co2Saved  Float
   txHash    String?
   timestamp DateTime @default(now())

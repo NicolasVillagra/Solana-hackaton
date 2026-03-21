@@ -83,7 +83,7 @@ curl -X POST http://localhost:3000/energy/report \
   -H "x-device-secret: device-secret-key-123" \
   -d '{
     "deviceId": "SOLAR-PANEL-001",
-    "mwh": 1.5
+    "kwh": 1.5
   }'
 ```
 
@@ -165,6 +165,7 @@ fi
 echo "4. Verificando DTOs en Swagger..."
 curl -s http://localhost:3000/api-json | grep -q "RegisterDeviceDto" && echo " ✓ RegisterDeviceDto disponible" || echo " ✗ RegisterDeviceDto no disponible"
 curl -s http://localhost:3000/api-json | grep -q "CreateEnergyReportDto" && echo " ✓ CreateEnergyReportDto disponible" || echo " ✗ CreateEnergyReportDto no disponible"
+curl -s http://localhost:3000/api-json | grep -q "kwh" && echo " ✓ Campo kwh disponible en DTO" || echo " ✗ Campo kwh no encontrado"
 
 echo "=== VERIFICACIÓN COMPLETADA ==="
 ```

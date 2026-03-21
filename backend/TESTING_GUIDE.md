@@ -43,7 +43,7 @@ curl -X POST http://localhost:3000/energy/report \
   -H "x-device-secret: super-secreto-123" \
   -d '{
     "deviceId": "IOT-DEVICE-PROD-001",
-    "mwh": 10.5
+    "kwh": 10.5
   }'
 ```
 

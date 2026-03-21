@@ -15,11 +15,11 @@ export class CreateEnergyReportDto {
    * Must be a positive value.
    */
   @ApiProperty({
-    description: 'Energy generated in Megawatt-hours (MWh)',
+    description: 'Energy generated in Kilowatt-hours (kWh)',
     example: 1.5,
     minimum: 0.0001
   })
   @IsNumber()
   @Min(0.0001)
-  mwh: number;
+  kwh: number;
 }

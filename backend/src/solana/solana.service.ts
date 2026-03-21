@@ -95,7 +95,7 @@ export class SolanaService implements OnModuleInit {
   /**
    * 🏁 SYNC CON NICO: Emite Certificados (RECs) en Token-2022
    */
-  async mintREC(deviceId: string, mwh: number, recipientWallet: string): Promise<string> {
+  async mintREC(deviceId: string, kwh: number, recipientWallet: string): Promise<string> {
     if (!this.program) {
       this.logger.warn('Solana program not initialized, returning mock transaction hash');
       return `mock-tx-${deviceId}-${Date.now()}`;
@@ -129,7 +129,7 @@ export class SolanaService implements OnModuleInit {
       const txHash = await (this.program.methods as any)
         .mintRecs(
           certificateId,
-          new anchor.BN(mwh),
+          new anchor.BN(kwh),
           new anchor.BN(now),
           new anchor.BN(expiry),
         )

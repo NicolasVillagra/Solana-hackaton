@@ -13,13 +13,14 @@
 ## 1. Misión Cumplida (2% Finalizado)
 Hemos cruzado la línea de meta. El sistema ya no es solo un ejemplo; es una infraestructura funcional de extremo a extremo.
 
-### 1.1 Real SPL Minting (CRÍTICO)
-- El contrato Rust ahora ejecuta una llamada CPI `token::mint_to` real.
-- Las recompensas generadas por los dispositivos IoT se transforman en tokens REC reales en la blockchain de Solana.
+### 1.1 Real Dual-Token Minting (PROD SYNC)
+- **Certificados (RECs):** Minteo inmutable en **Token-2022** con PDA de metadatos.
+- **Energía Líquida (kW):** Minteo de tokens SPL negociables para incentivar la generación.
+- Implementación de las direcciones oficiales de Nico para devnet.
 
-### 1.2 Sincronización de Cuentas (ATA)
-- El Backend ahora calcula dinámicamente la **Associated Token Account (ATA)** del dueño del dispositivo.
-- Esto garantiza que los tokens lleguen exactamente a quien los generó, sin intervención manual.
+### 1.2 On-Chain Device Registration
+- Los dispositivos ahora se registran permanentemente en Solana con metadatos completos (Serial, Marca, Capacidad).
+- Sincronización total entre la base de datos PostgreSQL y el estado on-chain.
 
 ### 1.3 Seguridad de Grado Empresarial
 - Implementación de **Hashed Authentication** (SHA-256).

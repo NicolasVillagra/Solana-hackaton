@@ -23,7 +23,7 @@ export class EnergyController {
     @Body() createReportDto: CreateEnergyReportDto,
     @Headers('x-device-secret') deviceSecret: string, // Simple auth for hackathon production-grade
   ) {
-    const { deviceId, mwh } = createReportDto;
+    const { deviceId, kwh } = createReportDto;
     
     // 🔴 AUDIT V2.1 FIX: Hardened Authentication (DB-backed)
     const device = await this.validateDeviceSecret(deviceId, deviceSecret);
@@ -31,15 +31,15 @@ export class EnergyController {
       throw new UnauthorizedException('Invalid device secret or unauthorized report attempt');
     }
 
-    this.logger.log(`Received energy report for device ${deviceId}: ${mwh} MWh`);
+    this.logger.log(`Received energy report for device ${deviceId}: ${kwh} kWh`);
     
-    const co2Saved = this.energyService.calculateCO2(mwh);
+    const co2Saved = this.energyService.calculateCO2(kwh);
     
     // Save to database
     const savedReport = await this.prisma.energyReport.create({
       data: {
         deviceId,
-        mwh,
+        kwh,
         co2Saved,
       },
     });
@@ -49,7 +49,7 @@ export class EnergyController {
     try {
       txHash = await this.energyService.processOnChainMinting(
         deviceId, 
-        mwh, 
+        kwh, 
         co2Saved,
         device.ownerWallet // 🏁 FINAL 100% COMPLETION: Passing real recipient
       );
