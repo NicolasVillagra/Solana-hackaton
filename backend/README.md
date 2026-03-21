@@ -1,6 +1,6 @@
-# 🌿 Gaia Ecotrack - Backend Core
+# 🌿 SolEnergy by Gaia Ecotrack - Backend Core
 
-![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white) ![Solana](https://img.shields.io/badge/solana-%239945FF.svg?style=for-the-badge&logo=solana&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white) ![Solana](https://img.shields.io/badge/solana-%239945FF.svg?style=for-the-badge&logo=solana&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![SQLite](https://img.shields.io/badge/SQLite-07405E?style=for-the-badge&logo=sqlite&logoColor=white) ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
 
 ---
 
@@ -25,12 +25,12 @@
 
 ##  Introducción
 
-Gaia Ecotrack es una solución DePIN (Red de Infraestructura Física Descentralizada) que convierte datos de generación de energía renovable en activos digitales tokenizados en la blockchain de Solana. Permite a dispositivos IoT registrar su producción, calcular el CO₂ evitado y recibir automáticamente dos tipos de tokens:
+**SolEnergy** es el módulo de certificación de energía de **Gaia Ecotrack**. Es una solución DePIN (Red de Infraestructura Física Descentralizada) que convierte datos de generación de energía renovable en activos digitales tokenizados en la blockchain de Solana. Permite a dispositivos IoT registrar su producción, calcular el CO₂ evitado y recibir automáticamente dos tipos de tokens:
 
 * Certificados REC (Token-2022): Representan la energía renovable generada con metadatos inmutables.  
 * Tokens de Energía Líquida (SPL): Simbolizan la energía en tiempo real, aptos para comercio o compensación.
 
-El proyecto ha evolucionado desde una simulación inicial hasta un sistema de producción empresarial, con integración real a Solana, seguridad bancaria y arquitectura escalable.  
+El proyecto utiliza **kWh** como unidad base para garantizar máxima precisión en instalaciones de cualquier escala.  
 ---
 
 ##  Características Principales
@@ -38,9 +38,9 @@ El proyecto ha evolucionado desde una simulación inicial hasta un sistema de pr
 * Registro de Dispositivos IoT  
   Cada dispositivo se registra tanto en la base de datos (Prisma) como en la blockchain (PDA). Se almacenan metadatos como nombre, serie, marca, capacidad y ubicación.  
 * Reportes de Energía Autenticados  
-  Los dispositivos envían reportes de MWh generados mediante un secreto hasheado (SHA-256). El backend verifica el hash en tiempo constante (timingSafeEqual) para evitar ataques de tiempo.  
+  Los dispositivos envían reportes de **kWh** generados mediante un secreto hasheado (SHA-256). El backend verifica el hash en tiempo constante (timingSafeEqual) para evitar ataques de tiempo.  
 * Cálculo Preciso de CO₂  
-  Uso de bignumber.js para convertir MWh a toneladas de CO₂ evitado (factor de emisión: 0.475 T CO₂/MWh).  
+  Uso de bignumber.js para convertir kWh a toneladas de CO₂ evitado (factor de emisión: 0.000475 T CO₂/kWh).  
 * Minting Dual en Solana  
   Al recibir un reporte, el backend invoca el programa Anchor que acuña:  
   * Certificados REC (Token-2022) usando el mint oficial de Nico.  
@@ -100,7 +100,7 @@ Flujo Detallado:
 
 | Área | Tecnologías |
 | :---- | :---- |
-| Backend | NestJS 11, TypeScript, Prisma (PostgreSQL) |
+| Backend | NestJS 11, TypeScript, Prisma (SQLite para Dev) |
 | Blockchain | Solana (Web3.js), Anchor 0.30, SPL Token, Token-2022 |
 | Seguridad | class-validator, bcrypt/SHA-256, crypto.timingSafeEqual, @nestjs/throttler |
 | Precisión | bignumber.js |
@@ -126,9 +126,9 @@ Flujo Detallado:
 3. `cd Solana-hackaton`
 4. Instalar dependencias del backend  
 5. `cd backend && npm install`
-6. Configurar base de datos (PostgreSQL)  
-   * Crea una base de datos llamada `gaia_ecotrack`  
-   * Configura la URL en `.env` (ver Variables de Entorno)  
+6. Configurar base de datos (SQLite)  
+   * El sistema usa SQLite por defecto para facilitar el desarrollo local.  
+   * Asegúrate de que el archivo `.env` apunte a `file:./dev.db`.
    * Ejecuta migraciones: `npx prisma migrate dev --name init`
    * `npx prisma generate`  
 7. Configurar el Smart Contract (opcional si ya está desplegado)  
@@ -146,7 +146,7 @@ PORT=3000
 NODE_ENV=development
 
 # Base de datos
-DATABASE_URL="postgresql://usuario:contraseña@localhost:5432/gaia_ecotrack"
+DATABASE_URL="file:./dev.db"
 
 # Solana
 SOLANA_RPC_URL="https://api.devnet.solana.com"
@@ -237,7 +237,7 @@ Body:
 ```json
 {
   "deviceId": "SOLAR-001",
-  "mwh": 10.5
+  "kwh": 10.5
 }
 ```
 

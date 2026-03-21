@@ -1,6 +1,6 @@
-# Solana Energy & RECs Smart Contract
+# ⛓️ SolEnergy Smart Contracts (Gaia Ecotrack)
 
-Este repositorio contiene el Smart Contract para el registro de dispositivos generadores de energía solar y la emisión descentralizada de tokens de energía (kW) y Certificados de Energía Renovable (RECs de CO2) en la red de Solana.
+Este repositorio contiene la lógica on-chain para el registro de dispositivos y la emisión descentralizada de tokens de energía (**SolEnergy SPL**) y Certificados de Energía Renovable (**RECs - Token-2022**) en la red de Solana.
 
 ## 🔗 Direcciones Oficiales (Solana Devnet)
 
