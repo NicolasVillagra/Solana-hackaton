@@ -14,39 +14,47 @@ export class DevicesService {
     private solanaService: SolanaService,
   ) {}
 
-  /**
-   * Helper to hash secrets for production grade security
-   */
   private hashSecret(secret: string): string {
     return crypto.createHash('sha256').update(secret).digest('hex');
   }
 
   async registerDevice(dto: RegisterDeviceDto & { secret: string }) {
-    const { ownerWallet, deviceId, location, secret } = dto;
-    
+    const { ownerWallet, deviceId, location, secret, name, serialNumber, brand, capacityKw } = dto;
     const secretHash = this.hashSecret(secret || `default-${deviceId}`);
 
-    // 🔴 AUDIT V2 FIX: Validate Solana PublicKey
     try {
       new PublicKey(ownerWallet);
     } catch (e) {
       throw new BadRequestException('Invalid Solana Owner Wallet address');
     }
 
-    // 🔴 AUDIT V2 FIX: Derive PDA Address
-    const [pdaAddress] = PublicKey.findProgramAddressSync(
-      [Buffer.from('device'), Buffer.from(deviceId)],
-      new PublicKey(process.env.SOLANA_PROGRAM_ID || '8UF83GAK1UZ3vS3wxuqa2bMEgJ2QfvUaS3EQsM5i5oaR')
-    );
+    this.logger.log(`Registering device ${deviceId} locally with detailed metadata.`);
 
-    this.logger.log(`Registering device ${deviceId} with PDA: ${pdaAddress.toBase58()}`);
+    // 🏁 SYNC CON NICO: Registro On-Chain Real
+    try {
+      await this.solanaService.registerDeviceOnChain({
+        ownerWallet,
+        deviceId,
+        name,
+        serialNumber,
+        brand,
+        location,
+        capacityKw,
+      });
+    } catch (e) {
+      this.logger.warn(`On-chain registration failed for ${deviceId}, but saved locally: ${e.message}`);
+    }
 
     return this.prisma.device.create({
       data: {
         deviceId,
-        ownerWallet, // Storing for local records
-        secretHash,  // 🔴 AUDIT V2.1: Protected Secret
+        name,
+        serialNumber,
+        brand,
+        ownerWallet,
+        secretHash,
         location,
+        capacityKw,
         status: 'ACTIVE',
       },
     });

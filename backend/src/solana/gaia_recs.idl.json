@@ -1,0 +1,236 @@
+{
+    "version": "0.1.0",
+    "name": "gaia_recs",
+    "instructions": [
+        {
+            "name": "mintRecs",
+            "accounts": [
+                {
+                    "name": "mint",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destination",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "mintAuthority",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "device",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "certificate",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "certificateId",
+                    "type": "string"
+                },
+                {
+                    "name": "mwh",
+                    "type": "u64"
+                },
+                {
+                    "name": "createdAt",
+                    "type": "i64"
+                },
+                {
+                    "name": "expiresAt",
+                    "type": "i64"
+                }
+            ]
+        },
+        {
+            "name": "addDevice",
+            "accounts": [
+                {
+                    "name": "device",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "owner",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "systemProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "serialNumber",
+                    "type": "string"
+                },
+                {
+                    "name": "brand",
+                    "type": "string"
+                },
+                {
+                    "name": "location",
+                    "type": "string"
+                },
+                {
+                    "name": "capacityKw",
+                    "type": "u64"
+                }
+            ]
+        },
+        {
+            "name": "mintEnergy",
+            "accounts": [
+                {
+                    "name": "mint",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "destination",
+                    "isMut": true,
+                    "isSigner": false
+                },
+                {
+                    "name": "mintAuthority",
+                    "isMut": true,
+                    "isSigner": true
+                },
+                {
+                    "name": "tokenProgram",
+                    "isMut": false,
+                    "isSigner": false
+                }
+            ],
+            "args": [
+                {
+                    "name": "amount",
+                    "type": "u64"
+                }
+            ]
+        }
+    ],
+    "accounts": [
+        {
+            "name": "Device",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "owner",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "deviceId",
+                        "type": "string"
+                    },
+                    {
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "name": "serialNumber",
+                        "type": "string"
+                    },
+                    {
+                        "name": "brand",
+                        "type": "string"
+                    },
+                    {
+                        "name": "location",
+                        "type": "string"
+                    },
+                    {
+                        "name": "capacityKw",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "totalMwh",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "Certificate",
+            "type": {
+                "kind": "struct",
+                "fields": [
+                    {
+                        "name": "mint",
+                        "type": "publicKey"
+                    },
+                    {
+                        "name": "certificateId",
+                        "type": "string"
+                    },
+                    {
+                        "name": "deviceId",
+                        "type": "string"
+                    },
+                    {
+                        "name": "mwh",
+                        "type": "u64"
+                    },
+                    {
+                        "name": "createdAt",
+                        "type": "i64"
+                    },
+                    {
+                        "name": "expiresAt",
+                        "type": "i64"
+                    },
+                    {
+                        "name": "bump",
+                        "type": "u8"
+                    }
+                ]
+            }
+        }
+    ],
+    "errors": [
+        {
+            "code": 6000,
+            "name": "InvalidMintAuthority",
+            "msg": "Invalid mint authority"
+        },
+        {
+            "code": 6001,
+            "name": "InsufficientFunds",
+            "msg": "Insufficient funds"
+        }
+    ]
+}

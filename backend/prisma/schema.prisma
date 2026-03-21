@@ -6,16 +6,20 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
 model Device {
   id           String         @id @default(cuid())
   deviceId     String         @unique
+  name         String?        // 🏁 SYNC CON NICO
+  serialNumber String?        // 🏁 SYNC CON NICO
+  brand        String?        // 🏁 SYNC CON NICO
   ownerWallet  String
   secretHash   String         // 🔴 AUDIT V2.1: Production Auth (Hashed)
   location     String
+  capacityKw   Int?           @default(0) // 🏁 SYNC CON NICO
   status       String         @default("ACTIVE")
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
