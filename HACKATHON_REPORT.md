@@ -38,10 +38,10 @@ Hemos cruzado la línea de meta. El sistema ya no es solo un ejemplo; es una inf
 - [x] Tests unitarios implementados
 
 ### **✅ SMART CONTRACT (100%)**
-- [x] Programa Anchor completo
-- [x] Instrucción `mint_rec` con CPI real (`token::mint_to`)
-- [x] Instrucción `register_device`
-- [x] PDA derivation para dispositivos
+- [x] Programa Anchor completo (`smartcontracts`)
+- [x] Instrucción `mint_recs` con CPI real (`token::mint_to`)
+- [x] Instrucción `add_device`
+- [x] PDA derivation para dispositivos (owner + serial)
 - [x] SPL Token integration con `anchor-spl`
 - [x] Validación de accounts con constraints
 - [x] Mensajes de log para debugging
