@@ -1,11 +1,7 @@
-# Gaia Ecotrack 
+# 🌿 Gaia Ecotrack - Backend Core
 
-Plataforma de Tokenización de Energía Renovable en Solana  
-[https://img.shields.io/badge/NestJS-11.0-red](https://img.shields.io/badge/NestJS-11.0-red)  
-[https://img.shields.io/badge/Solana-1.18-blue](https://img.shields.io/badge/Solana-1.18-blue)  
-[https://img.shields.io/badge/Anchor-0.30-purple](https://img.shields.io/badge/Anchor-0.30-purple)  
-[https://img.shields.io/badge/Prisma-5.0-green](https://img.shields.io/badge/Prisma-5.0-green)  
-[https://img.shields.io/badge/license-MIT-green](https://img.shields.io/badge/license-MIT-green)  
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white) ![Solana](https://img.shields.io/badge/solana-%239945FF.svg?style=for-the-badge&logo=solana&logoColor=white) ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white) ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white) ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
+
 ---
 
 ##  Tabla de Contenidos
