@@ -47,6 +47,25 @@ El portal estará disponible en `http://localhost:3000`.
 
 ---
 
+## ⚡ Solana Minting (Flujo de Demo)
+
+Para la demostración interactiva del Hackathon, la lógica de emisión (Minting) está desacoplada de la firma del usuario final para garantizar máxima seguridad y replicar un ecosistema DePIN real. Contamos con un Endpoint interno (`/api/mint`) que actúa como Oráculo.
+
+### Requisitos Funcionales para probar localmente
+Asegúrate de que tu PC Windows o WSL tenga alojada tu llave de desarrollador original (con la cual desplegaste el contrato) en alguno de los siguientes paths base:
+* WSL/Linux: `~/.config/solana/id.json`
+* Windows: `C:\Users\<usuario>\.config\solana\id.json`
+
+> **Nota para Evaluadores**: Si levantan este proyecto desde cero en su máquina, asegúrense de usar el script `create-energy-mint.ts` para asignar la autoridad a su propia billetera, y tener fondos de gas (`solana airdrop 1`).
+
+### ¿Cómo funciona el botón de "Mint Tokens"?
+1. El usuario conecta su Phantom.
+2. Al dar click, el frontend llama internamente al backend de NextJS (`/api/mint`) de manera silenciosa.
+3. Node.js carga tu `id.json` maestra, construye la transacción usando Anchor, genera la cuenta (ATA) si es necesaria y **firma los tokens directamente hacia la billetera conectada.**
+4. ¡El usuario recibe "Energy Tokens" sin tener que aprobar ni gastar gas de su lado!
+
+---
+
 ## 👥 Equipo
 Parte del ecosistema **Gaia Ecotrack** para la Solana Hackathon 2026.
 🏁🚀

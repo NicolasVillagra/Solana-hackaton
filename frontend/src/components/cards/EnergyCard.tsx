@@ -3,8 +3,17 @@
 import { useEffect, useState } from "react";
 import { motion, useSpring, useTransform } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap, TrendingUp } from "lucide-react";
+import { Zap, TrendingUp, Pickaxe, Loader2 } from "lucide-react";
 import { useEnergyData } from "@/hooks/useEnergyData";
+import { Button } from "@/components/ui/button";
+
+import { useWallet } from "@solana/wallet-adapter-react";
+import { useToast } from "@/hooks/use-toast";
+import { Transaction, TransactionInstruction } from "@solana/web3.js";
+import { AnchorProvider, BN } from "@coral-xyz/anchor";
+import { getAssociatedTokenAddressSync, createAssociatedTokenAccountInstruction, TOKEN_PROGRAM_ID } from "@solana/spl-token";
+import { connection, ENERGY_MINT_ADDRESS, getSmartContractsProgram } from "@/lib/solana-client";
+import { useQueryClient } from "@tanstack/react-query";
 
 function AnimatedCounter({ value }: { value: number }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -30,7 +39,57 @@ function AnimatedCounter({ value }: { value: number }) {
 }
 
 export function EnergyCard() {
-  const { data, isLoading } = useEnergyData();
+  const { data, isLoading: isEnergyLoading } = useEnergyData();
+
+  const wallet = useWallet();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const [isMinting, setIsMinting] = useState(false);
+
+  const handleMint = async () => {
+    if (!wallet.publicKey || !wallet.signTransaction) {
+      toast({ title: "Wallet not connected", description: "Please connect your wallet first.", variant: "destructive" });
+      return;
+    }
+    
+    setIsMinting(true);
+    try {
+      const amountToMint = data.kwhGenerated > 0 ? Math.floor(data.kwhGenerated) : 10;
+      const decimals = 6;
+      const mintAmount = amountToMint * Math.pow(10, decimals);
+      
+      const response = await fetch('/api/mint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          destinationPubkey: wallet.publicKey.toString(),
+          amount: mintAmount,
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to mint tokens on server');
+      }
+
+      toast({ 
+        title: "Tokens Minted!", 
+        description: `Successfully minted ${amountToMint} GAI based on ${amountToMint} kWh.`,
+      });
+      
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["token-mint-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["blockchain-activity"] });
+      }, 2000);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Minting Failed", description: err.message, variant: "destructive" });
+    } finally {
+      setIsMinting(false);
+    }
+  };
 
   return (
     <motion.div
@@ -42,15 +101,35 @@ export function EnergyCard() {
     >
       <Card className="h-full bg-gradient-to-br from-white to-[#F6F3EC] border-[#e5e0d8] shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden relative">
         <CardHeader className="pb-2">
-          <CardTitle className="text-base font-semibold text-[#6b6b6b] flex items-center gap-2">
-            <div className="w-8 h-8 bg-gradient-to-br from-[#F49136] to-[#e07d20] rounded-lg flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" />
-            </div>
-            Energy Generated
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-base font-semibold text-[#6b6b6b] flex items-center gap-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-[#F49136] to-[#e07d20] rounded-lg flex items-center justify-center">
+                <Zap className="w-5 h-5 text-white" />
+              </div>
+              Energy Generated
+            </CardTitle>
+            <Button
+              onClick={handleMint}
+              disabled={isMinting || isEnergyLoading}
+              size="sm"
+              className="bg-[#F49136] hover:bg-[#e07d20] text-white z-20 relative shadow-sm"
+            >
+              {isMinting ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Minting...
+                </>
+              ) : (
+                <>
+                  <Pickaxe className="w-4 h-4 mr-2" />
+                  Mint Tokens
+                </>
+              )}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
+          {isEnergyLoading ? (
             <div className="space-y-2">
               <div className="h-16 bg-[#f0ebe3] rounded animate-pulse" />
               <div className="h-4 bg-[#f0ebe3] rounded animate-pulse w-2/3" />
@@ -62,7 +141,7 @@ export function EnergyCard() {
                 <span className="text-2xl font-semibold text-[#904907]">kWh</span>
               </div>
               <p className="text-sm text-[#6b6b6b]">
-                Total renewable energy generated
+                Total renewable energy generated (1 kWh = 1 GAI)
               </p>
               <div className="flex items-center gap-1 text-green-600 text-sm">
                 <TrendingUp className="w-4 h-4" />

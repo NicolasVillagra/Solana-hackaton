@@ -4,10 +4,45 @@ import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Wifi, Server, Activity, Layers, Zap } from "lucide-react";
-import { mockSolanaNetwork } from "@/lib/blockchain-data";
+import { useQuery } from "@tanstack/react-query";
+import { connection } from "@/lib/solana-client";
 
 export function SolanaNetworkCard() {
-  const network = mockSolanaNetwork;
+  const { data, isLoading } = useQuery({
+    queryKey: ["solana-network-stats"],
+    queryFn: async () => {
+      try {
+        const slot = await connection.getSlot();
+        const performance = await connection.getRecentPerformanceSamples(1);
+        const tps =
+          performance.length > 0
+            ? performance[0].numTransactions / performance[0].samplePeriodSecs
+            : 0;
+
+        return {
+          network: "Devnet",
+          connectionStatus: "connected",
+          currentSlot: slot,
+          tps: Math.round(tps),
+        };
+      } catch (err) {
+        return {
+          network: "Devnet",
+          connectionStatus: "disconnected",
+          currentSlot: 0,
+          tps: 0,
+        };
+      }
+    },
+    refetchInterval: 5000,
+  });
+
+  const network = data || {
+    network: "Devnet",
+    connectionStatus: "connecting",
+    currentSlot: 0,
+    tps: 0,
+  };
   const isConnected = network.connectionStatus === "connected";
 
   return (
@@ -64,7 +99,7 @@ export function SolanaNetworkCard() {
               <span>Current Slot</span>
             </div>
             <span className="text-sm font-semibold text-[#1a1a1a]">
-              {network.currentSlot.toLocaleString()}
+              {isLoading ? "..." : network.currentSlot.toLocaleString()}
             </span>
           </div>
 
@@ -74,7 +109,7 @@ export function SolanaNetworkCard() {
               <span>TPS</span>
             </div>
             <span className="text-sm font-semibold text-[#F49136]">
-              {network.tps.toLocaleString()}
+              {isLoading ? "..." : network.tps.toLocaleString()}
             </span>
           </div>
 

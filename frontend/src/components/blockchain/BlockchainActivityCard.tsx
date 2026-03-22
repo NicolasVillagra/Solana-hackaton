@@ -4,17 +4,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Activity, Coins, ArrowRightLeft, FileCheck, Zap, ExternalLink } from "lucide-react";
-import { mockBlockchainTransactions } from "@/lib/blockchain-data";
 import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { connection, ENERGY_MINT_ADDRESS } from "@/lib/solana-client";
 
-const transactionIcons = {
+const transactionIcons: Record<string, React.ElementType> = {
   mint: Coins,
   transfer: ArrowRightLeft,
   energy_record: Zap,
   verify: FileCheck,
 };
 
-const transactionColors = {
+const transactionColors: Record<string, any> = {
   mint: {
     bg: "bg-[#F49136]/10",
     text: "text-[#F49136]",
@@ -37,7 +38,7 @@ const transactionColors = {
   },
 };
 
-const transactionLabels = {
+const transactionLabels: Record<string, string> = {
   mint: "Mint Tokens",
   transfer: "Transfer",
   energy_record: "Energy Record",
@@ -45,7 +46,41 @@ const transactionLabels = {
 };
 
 export function BlockchainActivityCard() {
-  const transactions = mockBlockchainTransactions;
+  const { data: transactions, isLoading } = useQuery({
+    queryKey: ["blockchain-activity"],
+    queryFn: async () => {
+      try {
+        const sigs = await connection.getSignaturesForAddress(ENERGY_MINT_ADDRESS, { limit: 10 });
+        
+        return sigs.map((sig, i) => {
+          let timeString = "Unknown";
+          if (sig.blockTime) {
+            const date = new Date(sig.blockTime * 1000);
+            const now = new Date();
+            const diffMins = Math.floor((now.getTime() - date.getTime()) / 60000);
+            timeString = diffMins < 60 ? `${diffMins} min ago` : date.toLocaleTimeString();
+          }
+
+          // For simplicity in UI without parsing instruction data, everything to the mint is labeled as Mint
+          return {
+            id: sig.signature,
+            signature: sig.signature,
+            type: "mint",
+            amount: "N/A", // Without fetching parsed transaction, amount is complex to determine
+            token: "GAI",
+            timestamp: timeString,
+            status: sig.err ? "failed" : "confirmed",
+          };
+        });
+      } catch (err) {
+        console.error(err);
+        return [];
+      }
+    },
+    refetchInterval: 10000,
+  });
+
+  const txs = transactions || [];
 
   const truncateSignature = (sig: string) => {
     return `${sig.slice(0, 6)}...${sig.slice(-6)}`;
@@ -69,14 +104,14 @@ export function BlockchainActivityCard() {
               Recent Blockchain Activity
             </CardTitle>
             <Badge variant="secondary" className="bg-[#F6F3EC] text-[#6b6b6b]">
-              {transactions.length} txns
+              {isLoading ? "..." : `${txs.length} txns`}
             </Badge>
           </div>
         </CardHeader>
         <CardContent className="p-0">
           <div className="max-h-[320px] overflow-y-auto custom-scrollbar">
             <AnimatePresence>
-              {transactions.map((tx, index) => {
+              {txs.map((tx, index) => {
                 const Icon = transactionIcons[tx.type];
                 const colors = transactionColors[tx.type];
 
@@ -103,7 +138,7 @@ export function BlockchainActivityCard() {
                           {transactionLabels[tx.type]}
                         </span>
                         <Badge variant="outline" className={cn("text-[10px] px-1.5 py-0", colors.badge)}>
-                          +{tx.amount} {tx.token}
+                          {tx.amount === "N/A" ? "Interact" : `+${tx.amount} ${tx.token}`}
                         </Badge>
                       </div>
                       <div className="flex items-center gap-2">
@@ -122,6 +157,11 @@ export function BlockchainActivityCard() {
                 );
               })}
             </AnimatePresence>
+            {!isLoading && txs.length === 0 && (
+              <div className="p-5 text-center text-sm text-[#6b6b6b]">
+                No recent transactions found.
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>

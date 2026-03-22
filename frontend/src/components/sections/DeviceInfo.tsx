@@ -81,6 +81,7 @@ export function DeviceInfo() {
                     </TableCell>
                     <TableCell
                       className={`text-[#1a1a1a] ${row.highlight ? "font-semibold text-[#F49136]" : ""}`}
+                      suppressHydrationWarning
                     >
                       {row.value}
                     </TableCell>

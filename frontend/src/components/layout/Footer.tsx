@@ -18,7 +18,7 @@ export function Footer() {
               <Leaf className="w-4 h-4 text-white" />
             </div>
             <span className="text-sm text-[#6b6b6b]">
-              © 2024 Gaia Ecotrack. Built for Solana Hackathon.
+              © 2026 Gaia Ecotrack. Built for Solana Hackathon.
             </span>
           </div>
           <div className="flex items-center gap-4">

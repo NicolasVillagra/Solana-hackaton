@@ -1,0 +1,351 @@
+{
+  "address": "9Wb9J8gi5A1rmYvhWewRjMZjgZUCRhocEp8J5n1m97Pd",
+  "metadata": {
+    "name": "gaia_recs",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "add_device",
+      "discriminator": [
+        21,
+        27,
+        66,
+        42,
+        18,
+        30,
+        14,
+        18
+      ],
+      "accounts": [
+        {
+          "name": "device",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  118,
+                  105,
+                  99,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              },
+              {
+                "kind": "arg",
+                "path": "serial_number"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "name",
+          "type": "string"
+        },
+        {
+          "name": "serial_number",
+          "type": "string"
+        },
+        {
+          "name": "device_brand",
+          "type": "string"
+        },
+        {
+          "name": "location",
+          "type": "string"
+        },
+        {
+          "name": "capacity_kw",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "initialize",
+      "discriminator": [
+        175,
+        175,
+        109,
+        31,
+        13,
+        152,
+        155,
+        237
+      ],
+      "accounts": [],
+      "args": []
+    },
+    {
+      "name": "mint_energy",
+      "discriminator": [
+        76,
+        31,
+        77,
+        219,
+        98,
+        60,
+        1,
+        241
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "mint_authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "mint_recs",
+      "discriminator": [
+        82,
+        50,
+        89,
+        52,
+        125,
+        221,
+        42,
+        85
+      ],
+      "accounts": [
+        {
+          "name": "mint",
+          "writable": true
+        },
+        {
+          "name": "destination",
+          "writable": true
+        },
+        {
+          "name": "mint_authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "device"
+        },
+        {
+          "name": "certificate",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  101,
+                  114,
+                  116,
+                  105,
+                  102,
+                  105,
+                  99,
+                  97,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "mint"
+              },
+              {
+                "kind": "arg",
+                "path": "certificate_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "certificate_id",
+          "type": "string"
+        },
+        {
+          "name": "rec_amount",
+          "type": "u64"
+        },
+        {
+          "name": "generation_date",
+          "type": "i64"
+        },
+        {
+          "name": "expiry_date",
+          "type": "i64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Device",
+      "discriminator": [
+        153,
+        248,
+        23,
+        39,
+        83,
+        45,
+        68,
+        128
+      ]
+    },
+    {
+      "name": "RECertificate",
+      "discriminator": [
+        191,
+        139,
+        15,
+        116,
+        245,
+        253,
+        84,
+        225
+      ]
+    }
+  ],
+  "types": [
+    {
+      "name": "Device",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "name",
+            "type": "string"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "serial_number",
+            "type": "string"
+          },
+          {
+            "name": "device_brand",
+            "type": "string"
+          },
+          {
+            "name": "location",
+            "type": "string"
+          },
+          {
+            "name": "capacity_kw",
+            "type": "u32"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RECertificate",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "certificate_id",
+            "type": "string"
+          },
+          {
+            "name": "device",
+            "type": "pubkey"
+          },
+          {
+            "name": "energy_report",
+            "type": "pubkey"
+          },
+          {
+            "name": "rec_amount",
+            "type": "u64"
+          },
+          {
+            "name": "generation_date",
+            "type": "i64"
+          },
+          {
+            "name": "expiry_date",
+            "type": "i64"
+          },
+          {
+            "name": "is_retired",
+            "type": "bool"
+          },
+          {
+            "name": "retirement_reason",
+            "type": "string"
+          },
+          {
+            "name": "retirement_date",
+            "type": "i64"
+          },
+          {
+            "name": "token_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
+          }
+        ]
+      }
+    }
+  ]
+}
