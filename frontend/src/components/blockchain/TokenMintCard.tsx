@@ -127,7 +127,7 @@ export function TokenMintCard() {
               <div className="w-8 h-8 bg-gradient-to-br from-[#F49136] to-[#e07d20] rounded-lg flex items-center justify-center">
                 <Coins className="w-4 h-4 text-white" />
               </div>
-              Gaia Token Mint
+              Gaia Energy Token Mint
             </CardTitle>
           </div>
         </CardHeader>
