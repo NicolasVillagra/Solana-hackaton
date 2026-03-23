@@ -1,7 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Sun, Leaf, Zap } from "lucide-react";
+import { Sun, Zap } from "lucide-react";
+import logo from "../../../logo.jpg";
 import { WalletConnectButton } from "@/components/wallet/WalletConnectButton";
 
 export function Navbar() {
@@ -21,14 +22,14 @@ export function Navbar() {
             transition={{ type: "spring", stiffness: 400 }}
           >
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#F49136] to-[#F6B07D] rounded-xl flex items-center justify-center shadow-lg shadow-orange-200">
-                <Leaf className="w-6 h-6 text-white" />
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-orange-200">
+                <img src={logo.src} alt="Solenergy Logo" className="w-10 h-10 object-contain rounded-2xl" />
               </div>
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-pulse" />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-bold bg-gradient-to-r from-[#F49136] to-[#904907] bg-clip-text text-transparent">
-                Gaia Ecotrack
+                SOLENERGY
               </span>
               <span className="text-xs text-[#6b6b6b] -mt-0.5">
                 Powered by Solana

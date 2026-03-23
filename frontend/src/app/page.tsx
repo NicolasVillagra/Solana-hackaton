@@ -305,10 +305,10 @@ export default function Dashboard() {
 
         <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
               <DialogTrigger asChild>
-                <div className="flex justify-end pb-5">
-                  <Button className="bg-[#F49136] hover:bg-[#e07d20] text-white font-medium px-4 py-2.5 rounded-xl shadow-lg shadow-orange-200 flex items-center gap-2 ">
+                <div className="flex justify-end pb-5 ">
+                  <Button className="bg-[#F49136] hover:bg-[#e07d20] text-white font-medium px-4 py-2.5 rounded-xl shadow-lg shadow-orange-200 flex items-center gap-2">
                     <Plus className="w-4 h-4" />
-                    Agregar Dispositivo
+                    Add Device
                   </Button>
                 </div>
               </DialogTrigger>
@@ -646,7 +646,7 @@ export default function Dashboard() {
                 <span className="text-2xl">🇨🇴</span>
               </div>
               <div className="text-white">
-                <h3 className="text-lg font-semibold">Red Gaia Colombia</h3>
+                <h3 className="text-lg font-semibold">SOLENERGY</h3>
                 <p className="text-white/80 text-sm">Métricas de blockchain en tiempo real</p>
               </div>
             </div>

@@ -39,7 +39,7 @@ export function SolanaIntegration() {
       </div>
 
       {/* Part 2: Energy Flow Diagram */}
-      <EnergyFlowDiagram />
+      {/* <EnergyFlowDiagram /> */}
 
       {/* Trust Indicators */}
       <motion.div
