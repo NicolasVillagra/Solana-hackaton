@@ -4,8 +4,8 @@ import idl from "./idl/smartcontracts.json";
 
 // Public Network addresses (Devnet)
 export const PROGRAM_ID = new PublicKey("9Wb9J8gi5A1rmYvhWewRjMZjgZUCRhocEp8J5n1m97Pd");
-export const ENERGY_MINT_ADDRESS = new PublicKey("9Xi8otRyHxhyy5MjbgeeVzwP452Qiq3dtw9uxzhhtDGt");
-export const REC_MINT_ADDRESS = new PublicKey("3KHwM1exGwu5EH6ymJgJ7FWLb1FYS7sSTqgLHRCbPvJ2");
+export const ENERGY_MINT_ADDRESS = new PublicKey("2YuWHezvPqVrGCckV8YcSV4VByzsdKmD4anu8YcQFzoT");
+export const REC_MINT_ADDRESS = new PublicKey("57W7NFZj9ysJQYtHRfXGQMPjMFMx3zxYEcs3NHSSSrsb");
 
 // Default RPC Connection
 export const connection = new Connection(

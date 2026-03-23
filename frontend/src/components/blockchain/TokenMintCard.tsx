@@ -52,50 +52,25 @@ export function TokenMintCard() {
     
     setIsMinting(true);
     try {
-      const provider = new AnchorProvider(connection, wallet as any, { commitment: "confirmed" });
-      const program = getSmartContractsProgram(provider);
-
-      const ata = getAssociatedTokenAddressSync(
-        ENERGY_MINT_ADDRESS,
-        wallet.publicKey
-      );
-
-      const tx = new Transaction();
-
-      // Check if ATA exists
-      const ataInfo = await connection.getAccountInfo(ata);
-      if (!ataInfo) {
-        tx.add(
-          createAssociatedTokenAccountInstruction(
-            wallet.publicKey,
-            ata,
-            wallet.publicKey,
-            ENERGY_MINT_ADDRESS
-          )
-        );
-      }
-
       const decimals = details?.decimals || 6;
       const amountToMint = 10;
-      const mintAmount = new BN(amountToMint * Math.pow(10, decimals));
+      const mintAmount = amountToMint * Math.pow(10, decimals);
       
-      const ix = await program.methods
-        .mintEnergy(mintAmount)
-        .accounts({
-          mint: ENERGY_MINT_ADDRESS,
-          destination: ata,
-          mintAuthority: wallet.publicKey,
-          tokenProgram: TOKEN_PROGRAM_ID,
-        })
-        .instruction();
+      const response = await fetch('/api/mint', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          destinationPubkey: wallet.publicKey.toString(),
+          amount: mintAmount,
+        }),
+      });
 
-      tx.add(ix);
-
-      const { blockhash } = await connection.getLatestBlockhash("confirmed");
-      tx.recentBlockhash = blockhash;
-      tx.feePayer = wallet.publicKey;
-
-      const signature = await wallet.sendTransaction(tx, connection);
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Failed to mint tokens on server');
+      }
       
       toast({ 
         title: "Tokens Minted!", 

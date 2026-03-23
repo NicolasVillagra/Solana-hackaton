@@ -47,22 +47,19 @@ El portal estará disponible en `http://localhost:3000`.
 
 ---
 
-## ⚡ Solana Minting (Flujo de Demo)
+## ⚡ Solana Minting Compartido (Flujo de Demo Devnet)
 
-Para la demostración interactiva del Hackathon, la lógica de emisión (Minting) está desacoplada de la firma del usuario final para garantizar máxima seguridad y replicar un ecosistema DePIN real. Contamos con un Endpoint interno (`/api/mint`) que actúa como Oráculo.
+Para facilitar la evaluación y uso interactivo durante la Hackathon, la lógica de emisión (Minting) está centralizada usando una **Mint Authority compartida** embebida en el código fuente.
 
-### Requisitos Funcionales para probar localmente
-Asegúrate de que tu PC Windows o WSL tenga alojada tu llave de desarrollador original (con la cual desplegaste el contrato) en alguno de los siguientes paths base:
-* WSL/Linux: `~/.config/solana/id.json`
-* Windows: `C:\Users\<usuario>\.config\solana\id.json`
+### ¿Cómo funciona para los Evaluadores y el Equipo?
+¡No se requiere ninguna configuración de CLI ni de llaves locales! Cualquier persona que clone este repositorio y ejecute `npm run dev` puede probar el minteo de tokens inmediatamente en la Devnet de Solana.
+El proyecto incluye un Keypair de prueba pre-financiado internamente (`src/lib/devnet-keypair.ts`) que es reconocido automáticamente como el Oráculo de Emisión y la Autoridad de los tokens configurados.
 
-> **Nota para Evaluadores**: Si levantan este proyecto desde cero en su máquina, asegúrense de usar el script `create-energy-mint.ts` para asignar la autoridad a su propia billetera, y tener fondos de gas (`solana airdrop 1`).
-
-### ¿Cómo funciona el botón de "Mint Tokens"?
-1. El usuario conecta su Phantom.
-2. Al dar click, el frontend llama internamente al backend de NextJS (`/api/mint`) de manera silenciosa.
-3. Node.js carga tu `id.json` maestra, construye la transacción usando Anchor, genera la cuenta (ATA) si es necesaria y **firma los tokens directamente hacia la billetera conectada.**
-4. ¡El usuario recibe "Energy Tokens" sin tener que aprobar ni gastar gas de su lado!
+### Flujo de los botones "Mint Tokens"
+1. El visitante interactúa con el Dashboard y conecta su billetera (Phantom, Solflare, etc.).
+2. Al mintear (ej: reclamando energía o certificados), el frontend realiza un llamado seguro a nuestro backend en Next.js (`/api/mint`).
+3. El servidor recibe la petición, carga la **llave compartida**, se comunica con la Blockchain para generar la cuenta de tokens (ATA) si el usuario es nuevo, y **firma y paga el minteo de los tokens hacia la billetera conectada.**
+4. ¡El usuario recibe tokens exitosamente sin fricción, sin tener que pagar "gas", ni firmar transacciones de red intrusivas!
 
 ---
 
