@@ -1,28 +1,54 @@
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { createMetadataAccountV3 } from '@metaplex-foundation/mpl-token-metadata';
-import { keypairIdentity, publicKey } from '@metaplex-foundation/umi';
-import * as fs from 'fs';
-import * as os from 'os';
-import * as path from 'path';
+import { publicKey, createSignerFromKeypair, signerIdentity } from '@metaplex-foundation/umi';
+import { DEVNET_KEYPAIR_SECRET, SHARED_ENERGY_MINT, SHARED_REC_MINT } from './src/lib/devnet-keypair';
 
 async function main() {
-  const umi = createUmi("https://api.devnet.solana.com");
+  const umi = createUmi('https://api.devnet.solana.com');
   
-  const keypairPath = path.join(os.homedir(), '.config', 'solana', 'id.json');
-  const secretKey = Uint8Array.from(JSON.parse(fs.readFileSync(keypairPath, 'utf-8')));
-  const myKeypair = umi.eddsa.createKeypairFromSecretKey(secretKey);
-  umi.use(keypairIdentity(myKeypair));
+  // Load the shared generated devnet keypair inside Umi
+  const myKeypair = umi.eddsa.createKeypairFromSecretKey(new Uint8Array(DEVNET_KEYPAIR_SECRET));
+  const myKeypairSigner = createSignerFromKeypair(umi, myKeypair);
+  
+  // Set our signer as the default identity to authorize the metadata creation
+  umi.use(signerIdentity(myKeypairSigner));
 
-  const mint = publicKey("9Xi8otRyHxhyy5MjbgeeVzwP452Qiq3dtw9uxzhhtDGt");
-
-  console.log("Sending metadata transaction...");
+  console.log("Enviando Metadata para GAI (Energy)...");
   try {
-    const tx = createMetadataAccountV3(umi, {
-      mint,
-      mintAuthority: umi.identity,
+    const tx1 = createMetadataAccountV3(umi, {
+      mint: publicKey(SHARED_ENERGY_MINT.toBase58()),
+      mintAuthority: myKeypairSigner,
+      payer: myKeypairSigner,
+      updateAuthority: myKeypairSigner.publicKey,
       data: {
-        name: "Energy Token",
-        symbol: "ENT",
+        name: "Gaia Energy",
+        symbol: "GAI",
+        uri: "https://raw.githubusercontent.com/solana-developers/program-examples/new-examples/tokens/tokens-and-minting/token-metadata/assets/metadata.json", // Optional fallback generic URI
+        sellerFeeBasisPoints: 0,
+        creators: null,
+        collection: null,
+        uses: null,
+      },
+      isMutable: true,
+      collectionDetails: null,
+    });
+    
+    await tx1.sendAndConfirm(umi);
+    console.log("✅ Metadatos agregados para GAI:", SHARED_ENERGY_MINT.toBase58());
+  } catch (e) {
+    console.error("Error GAI:", e);
+  }
+
+  console.log("Enviando Metadata para gREC (Certificates)...");
+  try {
+    const tx2 = createMetadataAccountV3(umi, {
+      mint: publicKey(SHARED_REC_MINT.toBase58()),
+      mintAuthority: myKeypairSigner,
+      payer: myKeypairSigner,
+      updateAuthority: myKeypairSigner.publicKey,
+      data: {
+        name: "Gaia REC",
+        symbol: "gREC",
         uri: "",
         sellerFeeBasisPoints: 0,
         creators: null,
@@ -32,13 +58,12 @@ async function main() {
       isMutable: true,
       collectionDetails: null,
     });
-
-    const result = await tx.sendAndConfirm(umi);
-    const bs58 = await import('bs58');
-    console.log("Success! Metaplex Tx Hash:", bs58.default.encode(result.signature));
-  } catch (err) {
-    console.error("Metaplex Error:", err);
+    
+    await tx2.sendAndConfirm(umi);
+    console.log("✅ Metadatos agregados para gREC:", SHARED_REC_MINT.toBase58());
+  } catch (e) {
+    console.error("Error gREC:", e);
   }
 }
 
-main();
+main().catch(console.error);

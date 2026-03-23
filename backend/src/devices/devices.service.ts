@@ -30,23 +30,23 @@ export class DevicesService {
 
     this.logger.log(`Registering device ${deviceId} locally with detailed metadata.`);
 
-    // 🏁 SYNC CON NICO: Registro On-Chain Real
-    try {
-      await this.solanaService.registerDeviceOnChain({
-        ownerWallet,
-        deviceId,
+    // 🏁 SYNC CON NICO: On-Chain Real ahora es manejado por el Frontend, el Backend solo almacena la metadata off-chain.
+    this.logger.log(`Skipping on-chain oracle transaction. Expected to be signed and submitted by the user's wallet.`);
+
+
+    return this.prisma.device.upsert({
+      where: { deviceId },
+      update: {
         name,
         serialNumber,
         brand,
+        ownerWallet, // from frontend POST body payload!
+        secretHash,
         location,
         capacityKw,
-      });
-    } catch (e) {
-      this.logger.warn(`On-chain registration failed for ${deviceId}, but saved locally: ${e.message}`);
-    }
-
-    return this.prisma.device.create({
-      data: {
+        status: 'ACTIVE',
+      },
+      create: {
         deviceId,
         name,
         serialNumber,

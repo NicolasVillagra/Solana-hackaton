@@ -154,54 +154,6 @@ export class SolanaService implements OnModuleInit {
     }
   }
 
-  /**
-   * 🏁 SYNC CON NICO: Registra el dispositivo ON-CHAIN en Solana
-   */
-  async registerDeviceOnChain(dto: {
-    ownerWallet: string,
-    deviceId: string,
-    name: string,
-    serialNumber: string,
-    brand: string,
-    location: string,
-    capacityKw: number
-  }): Promise<string> {
-    if (!this.program) {
-      this.logger.warn('Solana program not initialized, returning mock transaction hash');
-      return `mock-device-tx-${dto.deviceId}-${Date.now()}`;
-    }
-
-    try {
-      const owner = new PublicKey(dto.ownerWallet);
-      const [devicePda] = PublicKey.findProgramAddressSync(
-        [Buffer.from('device'), owner.toBuffer(), Buffer.from(dto.deviceId)],
-        this.program.programId
-      );
-
-      const txHash = await (this.program.methods as any)
-        .addDevice(
-          dto.name,
-          dto.serialNumber,
-          dto.brand,
-          dto.location,
-          dto.capacityKw
-        )
-        .accounts({
-          device: devicePda,
-          owner: owner,
-          systemProgram: SystemProgram.programId,
-        })
-        .signers([this.oracleKeypair]) // Note: In Nico's contract, 'owner' is a Signer.
-        // If the Oracle is acting as the registrar, it must sign.
-        .rpc();
-
-      this.logger.log(`On-chain Registration successful: ${txHash}`);
-      return txHash;
-    } catch (e) {
-      this.logger.error(`On-chain Registration failed: ${e.message}`);
-      throw e;
-    }
-  }
 
   /**
    * 🏁 SYNC CON NICO: Emite Tokens líquidos de Energía (kW) en SPL Standard

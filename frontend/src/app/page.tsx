@@ -115,7 +115,8 @@ function StatBadge({ icon: Icon, label, value, color }: { icon: React.ElementTyp
 
 export default function Dashboard() {
   const { getTotalKwh, getTotalTokens, projects } = useProjects();
-  const { publicKey, connected } = useWallet();
+  const wallet = useWallet();
+  const { publicKey, connected, sendTransaction } = wallet;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -155,6 +156,48 @@ export default function Dashboard() {
     setIsSubmitting(true);
 
     try {
+      // 1. Solana On-Chain Registration via Anchor
+      const { connection, getSmartContractsProgram } = await import("@/lib/solana-client");
+      const { AnchorProvider } = await import("@coral-xyz/anchor");
+      const { PublicKey, SystemProgram, Transaction } = await import("@solana/web3.js");
+      
+      const provider = new AnchorProvider(connection, wallet as any, { commitment: "confirmed" });
+      const program = getSmartContractsProgram(provider);
+      
+      const [devicePda] = PublicKey.findProgramAddressSync(
+        [Buffer.from('device'), publicKey.toBuffer(), Buffer.from(formData.serialNumber)],
+        program.programId
+      );
+      
+      const accountInfo = await connection.getAccountInfo(devicePda);
+      if (accountInfo !== null) {
+        throw new Error("Este Número de Serie ya está registrado en la red de Solana para tu wallet. Por favor usa uno distinto.");
+      }
+
+      const parsedCapacity = Math.floor(parseFloat(formData.capacityKw) || 0);
+
+      const ix = await program.methods.addDevice(
+        formData.name,
+        formData.serialNumber,
+        formData.brand,
+        formData.location,
+        parsedCapacity
+      ).accounts({
+        device: devicePda,
+        owner: publicKey,
+        systemProgram: SystemProgram.programId,
+      }).instruction();
+      
+      const tx = new Transaction().add(ix);
+      const { blockhash } = await connection.getLatestBlockhash('confirmed');
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = publicKey;
+      
+      const signature = await sendTransaction(tx, connection, { skipPreflight: true });
+      console.log("Tx Signature:", signature);
+      await connection.confirmTransaction(signature, 'confirmed');
+
+      // 2. Save metadata to off-chain DB in the NestJS Backend
       const response = await fetch("http://localhost:3001/devices", {
         method: "POST",
         headers: {
