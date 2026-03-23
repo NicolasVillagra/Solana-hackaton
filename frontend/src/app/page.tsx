@@ -466,8 +466,6 @@ export default function Dashboard() {
             position: "relative",
             overflow: "hidden",
             margin: "30px auto",
-            justifyContent: "center",
-            alignItems: "center"
           }}
         >
           <div style={{
@@ -477,23 +475,23 @@ export default function Dashboard() {
             pointerEvents: "none",
           }} />
 
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "20px" }}>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "45px" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                 <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#14f195", boxShadow: "0 0 8px #14f195", animation: "blink 1.4s infinite" }} />
-                <span style={{ fontSize: "11px", color: "#14f195", letterSpacing: "0.12em", textTransform: "uppercase" }}>Live Pipeline</span>
+                <span style={{ fontSize: "14px", color: "#14f195", letterSpacing: "0.12em", textTransform: "uppercase" }}>Live Pipeline</span>
               </div>
               <h3 style={{ margin: "4px 0 0", fontSize: "15px", fontWeight: 600, color: "#f8fafc", letterSpacing: "0.02em" }}>
                 IoT → Solana Data Flow
               </h3>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.08em" }}>NETWORK</div>
-              <div style={{ fontSize: "12px", color: "#a78bfa", fontWeight: 600 }}>Solana Devnet</div>
+              <div style={{ fontSize: "12px", color: "#64748b", letterSpacing: "0.08em" }}>NETWORK</div>
+              <div style={{ fontSize: "14px", color: "#a78bfa", fontWeight: 600 }}>Solana Devnet</div>
             </div>
           </div>
 
-          <div ref={containerRef} style={{ position: "relative", height: "100px", marginBottom: "20px" }}>
+          <div ref={containerRef} style={{ position: "relative", height: "100px", marginBottom: "20px"}}>
             <svg width="100%" height="100%" style={{ position: "absolute", inset: 0 }}>
               <defs>
                 {NODES.map((n) => (
@@ -534,7 +532,7 @@ export default function Dashboard() {
               })}
             </svg>
 
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", height: "100%", position: "relative", zIndex: 1 }}>
+            <div style={{ display: "flex", justifyContent: "space-around", alignItems: "center", height: "100%", position: "relative", zIndex: 1, }}>
               {NODES.map((node) => (
                 <div
                   key={node.id}
@@ -547,11 +545,11 @@ export default function Dashboard() {
                   }}
                 >
                   <div style={{
-                    width: "48px", height: "48px", borderRadius: "12px",
+                    width: "110px", height: "110px", borderRadius: "12px",
                     background: `rgba(0,0,0,0.6)`,
                     border: `1.5px solid ${pulseNode === node.id ? node.color : node.color + "55"}`,
                     display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "20px",
+                    fontSize: "30px",
                     boxShadow: pulseNode === node.id
                       ? `0 0 20px ${node.glow}, 0 0 40px ${node.glow}`
                       : activeNode === node.id
@@ -562,8 +560,8 @@ export default function Dashboard() {
                     {node.icon}
                   </div>
                   <div style={{ textAlign: "center" }}>
-                    <div style={{ fontSize: "10px", fontWeight: 700, color: node.color, letterSpacing: "0.05em" }}>{node.label}</div>
-                    <div style={{ fontSize: "8px", color: "#64748b", marginTop: "1px" }}>{node.sublabel}</div>
+                    <div style={{ fontSize: "16px", fontWeight: 700, color: node.color, letterSpacing: ".05em" }}>{node.label}</div>
+                    <div style={{ fontSize: "11px", color: "#64748b", marginTop: "1px" }}>{node.sublabel}</div>
                   </div>
                 </div>
               ))}
@@ -584,10 +582,10 @@ export default function Dashboard() {
                 border: "1px solid rgba(255,255,255,0.06)", padding: "10px 8px",
                 textAlign: "center",
               }}>
-                <div style={{ fontSize: "14px", fontWeight: 700, color: s.color }}>
-                  {s.value}<span style={{ fontSize: "9px", marginLeft: "2px", opacity: 0.7 }}>{s.unit}</span>
+                <div style={{ fontSize: "16px", fontWeight: 700, color: s.color }}>
+                  {s.value}<span style={{ fontSize: "10px", marginLeft: "2px", opacity: 0.7 }}>{s.unit}</span>
                 </div>
-                <div style={{ fontSize: "8px", color: "#64748b", marginTop: "3px", letterSpacing: "0.06em" }}>{s.label}</div>
+                <div style={{ fontSize: "11px", color: "#64748b", marginTop: "3px", letterSpacing: "0.06em" }}>{s.label}</div>
               </div>
             ))}
           </div>
@@ -599,9 +597,9 @@ export default function Dashboard() {
           }}>
             <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#14f195", flexShrink: 0, boxShadow: "0 0 6px #14f195" }} />
             <div style={{ flex: 1, overflow: "hidden" }}>
-              <div style={{ fontSize: "8px", color: "#64748b", letterSpacing: "0.1em", marginBottom: "2px" }}>LATEST TX HASH</div>
+              <div style={{ fontSize: "10px", color: "#64748b", letterSpacing: "0.1em", marginBottom: "2px" }}>LATEST TX HASH</div>
               <div style={{
-                fontSize: "10px", color: "#14f195", fontWeight: 500,
+                fontSize: "14px", color: "#14f195", fontWeight: 500,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                 letterSpacing: "0.04em",
               }}>
@@ -609,7 +607,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div style={{
-              fontSize: "8px", color: "#a78bfa", background: "rgba(167,139,250,0.1)",
+              fontSize: "10px", color: "#a78bfa", background: "rgba(167,139,250,0.1)",
               borderRadius: "4px", padding: "2px 6px", flexShrink: 0,
               border: "1px solid rgba(167,139,250,0.2)",
             }}>
