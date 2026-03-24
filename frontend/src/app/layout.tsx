@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Gaia Ecotrack - Renewable Energy Tokenization on Solana",
+  title: "Sol Energy - Renewable Energy Tokenization on Solana",
   description: "A decentralized platform for tokenizing renewable energy. 1 kWh = 1 Gaia Token. Track, verify, and trade renewable energy certificates on Solana blockchain.",
   keywords: ["Gaia", "Solana", "Renewable Energy", "Tokenization", "DePIN", "Climate Tech", "Web3"],
   authors: [{ name: "Gaia Ecotrack Team" }],
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌱</text></svg>",
   },
   openGraph: {
-    title: "Gaia Ecotrack",
+    title: "Sol Energy",
     description: "Renewable Energy Tokenization on Solana",
     type: "website",
   },
